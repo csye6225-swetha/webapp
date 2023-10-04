@@ -2,13 +2,12 @@ package com.csye6225.assignment3.pojo;
 
 import java.util.Date;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -41,8 +40,14 @@ public class Account {
 	private Date account_created;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "account_updated", nullable = false,updatable=false)
+    @Column(name = "account_updated", nullable = false)
 	private Date account_updated;
+	
+	@PrePersist
+	protected void onCreate() {
+	    this.account_created = new Date();
+	    this.account_updated = this.account_created; 
+	}
 
 	public int getId() {
 		return id;
@@ -68,9 +73,9 @@ public class Account {
 		this.last_name = last_name;
 	}
 
-	public void setPassword(String password, PasswordEncoder passwordEncoder) {
+	public void setPassword(String password) {
 		
-		this.password = passwordEncoder.encode(password);
+		this.password = password;
 	}
 
 	public String getEmail() {
