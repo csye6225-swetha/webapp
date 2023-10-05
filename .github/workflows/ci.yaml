@@ -18,6 +18,17 @@ jobs:
           java-version: 20
           distribution: 'temurin'
 
+      - name: Start MySQL service
+        run: sudo systemctl start mysql
+
+      - name: Check MySQL socket file
+        run: ls -l /var/run/mysqld/mysqld.sock
+
+      - name: Check MySQL status and logs
+        run: |
+          sudo systemctl status mysql
+          cat /var/log/mysql/error.log
+
       - name: Install MySQL
         run: |
           sudo apt-get update -y
