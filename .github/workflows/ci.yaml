@@ -18,11 +18,7 @@ jobs:
           java-version: 20
           distribution: 'temurin'
 
-
-      - name: Build and test
-        run: |
-          ./mvnw clean install
-
+          
       - name: Set up MySQL
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
@@ -35,6 +31,12 @@ jobs:
             echo "Waiting for MySQL to start..."
             sleep 1
           done
+
+      - name: Build jar and run Maven 
+        run: |
+          mvn install -DskipTests 
+          cd target
+          java -jar webapp-0.0.1-SNAPSHOT.jar
 
 
       - name: Run Integration Tests
