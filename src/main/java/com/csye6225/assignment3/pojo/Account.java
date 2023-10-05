@@ -2,7 +2,6 @@ package com.csye6225.assignment3.pojo;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 
