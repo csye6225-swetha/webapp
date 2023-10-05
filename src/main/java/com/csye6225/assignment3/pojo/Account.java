@@ -1,16 +1,12 @@
 package com.csye6225.assignment3.pojo;
 
 import java.util.Date;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -52,9 +48,6 @@ public class Account {
 	    this.account_created = new Date();
 	    this.account_updated = this.account_created; 
 	}
-	
-	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	 private List<Assignment> assignments;
 
 	public int getId() {
 		return id;
@@ -89,19 +82,6 @@ public class Account {
 		return email;
 	}
 
-
-	public List<Assignment> getAssignments() {
-		return assignments;
-	}
-
-	public void setAssignments(List<Assignment> assignments) {
-		this.assignments = assignments;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -121,6 +101,7 @@ public class Account {
 	public void setAccount_updated(Date account_updated) {
 		this.account_updated = account_updated;
 	}
+	
 }
 
 
