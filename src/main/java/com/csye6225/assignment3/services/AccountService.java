@@ -1,6 +1,7 @@
 package com.csye6225.assignment3.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
@@ -43,14 +44,6 @@ public class AccountService {
 	                    if (existingAccount.isPresent()) {
 	                    	
 	                    	System.out.println("User already exists: " + email);
-	                    	
-//	                        Account newAccount = new Account();
-//	                        
-//	                        newAccount.setEmail(email);
-//	                        newAccount.setPassword(passwordEncoder.encode(password));
-//	                        newAccount.setFirst_name(firstName);
-//	                        newAccount.setLast_name(lastName);
-//	                        accountRepository.save(newAccount);
 	                       
 	                    } else {
 	                       
@@ -70,5 +63,4 @@ public class AccountService {
 	        }
 		
 	}
-
 }
