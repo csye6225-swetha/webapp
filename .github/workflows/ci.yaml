@@ -25,13 +25,6 @@ jobs:
         run: |
            docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -p 3306:3306 -d mysql:latest
 
-      - name: Wait for MySQL to be ready
-        run: |
-          while ! mysqladmin ping -h localhost --silent; do
-            echo "Waiting for MySQL to start..."
-            sleep 1
-          done
-
       - name: Build jar and run Maven 
         run: |
           mvn install -DskipTests 
