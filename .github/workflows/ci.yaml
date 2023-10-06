@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 20
+          distribution: 'temurin'
+
+          
+      - name: Set up MySQL
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        run: |
+           docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -p 3306:3306 -d mysql:latest
+
+      - name: Build jar and run Maven 
+        run: |
+          mvn install -DskipTests 
+          cd target
+          java -jar webapp-0.0.1-SNAPSHOT.jar
+
+
+      - name: Run Integration Tests
+        env:
+          DB_URL: jdbc:mysql://localhost:3306/your_database_name
+          DB_USERNAME: root
+          DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        run: |
+          ./mvn test
+
+
+
+     
+
+

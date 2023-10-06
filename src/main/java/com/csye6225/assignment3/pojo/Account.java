@@ -1,12 +1,19 @@
 package com.csye6225.assignment3.pojo;
 
 import java.util.Date;
+import java.util.List;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -17,9 +24,10 @@ public class Account {
 	
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@Column(name = "id", unique = true, nullable = false)
-	private int id;
+	private String id;
 	
 	@Column(name = "first_name", nullable = false)
 	private String first_name;
@@ -48,14 +56,11 @@ public class Account {
 	    this.account_created = new Date();
 	    this.account_updated = this.account_created; 
 	}
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	 private List<Assignment> assignments;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getFirst_name() {
 		return first_name;
@@ -82,6 +87,19 @@ public class Account {
 		return email;
 	}
 
+
+	public List<Assignment> getAssignments() {
+		return assignments;
+	}
+
+	public void setAssignments(List<Assignment> assignments) {
+		this.assignments = assignments;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -101,7 +119,6 @@ public class Account {
 	public void setAccount_updated(Date account_updated) {
 		this.account_updated = account_updated;
 	}
-	
 }
 
 
