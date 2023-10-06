@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,30 +19,41 @@ jobs:
           java-version: 20
           distribution: 'temurin'
 
+      - name: Copy file to /opt
+        run: |
+          sudo mkdir -p /opt
+          sudo cp ./accounts.csv /opt/
+
           
       - name: Set up MySQL
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
-           docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -p 3306:3306 -d mysql:latest
+            docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -p 3306:3306 -d mysql:latest
 
       - name: Build jar and run Maven 
         run: |
           mvn install -DskipTests 
           cd target
-          java -jar webapp-0.0.1-SNAPSHOT.jar
+          nohup java -jar webapp-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
 
+      - name: Wait for Application to Start
+        run: sleep 120
+
+      - name: CHANGE DIRECTORY
+        run: |
+          cd ..
+          ls
+          
 
       - name: Run Integration Tests
         env:
-          DB_URL: jdbc:mysql://localhost:3306/your_database_name
+          DB_URL: jdbc:mysql://localhost:3306/webapp_DB
           DB_USERNAME: root
           DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         run: |
-          ./mvn test
+          mvn test
 
 
 
      
-
-
