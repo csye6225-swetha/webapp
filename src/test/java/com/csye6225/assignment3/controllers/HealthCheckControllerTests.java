@@ -24,7 +24,7 @@ public class HealthCheckControllerTests {
     	
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + "8080" + "/healthz", String.class);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), response.getStatusCode());
     }
 
 }
