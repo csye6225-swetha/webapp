@@ -64,13 +64,11 @@ build {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1"
-    ]
+    
 
     script = "packer/install-script.sh"
   
-
-  
-
+}
   provisioner "file" {
 
     source      = "${var.source_file}"
