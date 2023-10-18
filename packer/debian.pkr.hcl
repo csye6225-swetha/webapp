@@ -54,7 +54,7 @@ build {
       "CHECKPOINT_DISABLE=1"
     ]
 
-    script = "install-script.sh"
+    script = "packer/install-script.sh"
   }
 }
 
