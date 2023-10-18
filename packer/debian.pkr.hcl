@@ -67,7 +67,7 @@ build {
     ]
 
     script = "packer/install-script.sh"
-  }
+  
 
   
 
