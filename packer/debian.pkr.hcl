@@ -31,7 +31,6 @@ variable "accounts_file" {
   type    = string
   default = ""
 }
-
 variable "ami_users" {
   type    = list(string)
   default = ["969159499630", "196011838237"]
@@ -56,6 +55,7 @@ source "amazon-ebs" "my-ami" {
   }
 }
 
+
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
@@ -68,13 +68,15 @@ build {
     script = "packer/install-script.sh"
   }
 
-  provisioner "file" {
-    source      = var.source_file
-    destination = "/home/admin/"
-  }
+  
 
   provisioner "file" {
-    source      = var.accounts_file
+
+    source      = "${var.source_file}"
+    destination = "/home/admin/"
+  }
+  provisioner "file" {
+    source      = "${var.accounts_file}"
     destination = "/home/admin/"
   }
 }
