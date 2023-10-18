@@ -21,8 +21,12 @@ jobs:
 
     - name: Packer Format Check
       run: |
-        for template in $(find . -name '*.json' -o -name '*.hcl'); do
+       for template in $(find . -name '*.json' -o -name '*.hcl'); do
           packer fmt "$template"
+          if ! git diff --exit-code "$template"; then
+            echo "Packer template $template is not correctly formatted."
+            exit 1
+          fi
         done
       
 
