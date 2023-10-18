@@ -1,0 +1,78 @@
+name: BUILD-AMI
+
+on:
+  push:
+    branches:
+      - working
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 20
+          distribution: 'temurin'
+
+      - name: Copy file to /opt
+        run: |
+          sudo mkdir -p /opt
+          sudo cp ./accounts.csv /opt/
+
+          
+      - name: Set up MySQL
+        env:
+           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        run: |
+          docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -p 3306:3306 -d mysql:latest
+
+      - name: Build jar and run Maven 
+        run: |
+          mvn install -DskipTests 
+          cd target
+          nohup java -jar webapp-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+
+      - name: Wait for Application to Start
+        run: sleep 40
+
+      - name: CHANGE DIRECTORY
+        run: |
+          cd ..
+          ls
+          
+
+      - name: Run Integration Tests
+        env:
+          DB_URL: jdbc:mysql://localhost:3306/webapp_DB
+          DB_USERNAME: root
+          DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        run: |
+          mvn test
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+         version: "latest"
+
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         aws-region: us-east-1
+
+      - name: Run Packer init
+        id: init
+        run: |
+         packer init packer/debian.pkr.hcl
+
+      - name: Build AMI
+        run: |
+         packer build packer/debian.pkr.hcl
+         
+
