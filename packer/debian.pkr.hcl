@@ -22,6 +22,17 @@ variable "ssh_username" {
   default = "admin"
 }
 
+variable "source_file" {
+  type    = string
+  default = ""
+
+}
+
+variable "accounts_file" {
+  type    = string
+  default = ""
+}
+
 
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-ami" {
@@ -45,6 +56,7 @@ source "amazon-ebs" "my-ami" {
   }
 }
 
+
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
@@ -56,4 +68,14 @@ build {
 
     script = "packer/install-script.sh"
   }
+
+  provisioner "file" {
+    source      = "${var.source_file}"
+    destination = "/home/admin/"
+  }
+  provisioner "file" {
+    source      = "${var.accounts_file}"
+    destination = "/home/admin/"
+  }
 }
+
