@@ -38,5 +38,3 @@ sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '
 sudo mysql -e "FLUSH PRIVILEGES;"
 
 echo "Software installation and configuration completed."
-
-

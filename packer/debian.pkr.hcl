@@ -57,6 +57,3 @@ build {
     script = "install-script.sh"
   }
 }
-
-
-
