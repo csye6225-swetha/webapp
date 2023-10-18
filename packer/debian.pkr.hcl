@@ -45,9 +45,10 @@ source "amazon-ebs" "my-ami" {
   }
 }
 
+
 build {
   sources = ["source.amazon-ebs.my-ami"]
-
+  
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
@@ -56,4 +57,14 @@ build {
 
     script = "packer/install-script.sh"
   }
+
+  provisioner "file" {
+    source =  "${var.source_file}"
+    destination = "/home/admin/"
+  }
+   provisioner "file" {
+    source =  "${var.accounts_file}"
+    destination = "/home/admin/"
+  }
 }
+

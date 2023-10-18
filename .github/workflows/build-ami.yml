@@ -72,6 +72,6 @@ jobs:
 
       - name: Build AMI
         run: |
-         packer build packer/debian.pkr.hcl
-         
+         packer build -var 'source_file=/home/runner/work/webapp-check/webapp-check/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp-check/webapp-check/accounts.csv' packer/debian.pkr.hcl
+
 
