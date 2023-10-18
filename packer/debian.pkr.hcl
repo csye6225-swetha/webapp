@@ -22,6 +22,17 @@ variable "ssh_username" {
   default = "admin"
 }
 
+variable "source_file" {
+  type    = string
+  default = ""
+
+}
+
+variable "accounts_file" {
+  type    = string
+  default = ""
+}
+
 
 variable "ami_users" {
   type    = list(string)
