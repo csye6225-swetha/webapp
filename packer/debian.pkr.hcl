@@ -22,6 +22,12 @@ variable "ssh_username" {
   default = "admin"
 }
 
+
+variable "ami_users" {
+  type    = list(string)
+  default = ["969159499630", "196011838237"]
+}
+
 variable "source_file" {
   type    = string
   default = ""
