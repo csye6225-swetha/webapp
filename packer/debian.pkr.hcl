@@ -36,15 +36,20 @@ variable "ami_users" {
   default = ["969159499630", "196011838237"]
 }
 
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-ami" {
   region          = var.aws_region
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
-  ami_regions     = ["us-east-1"]
+  ami_regions     = [var.aws_region]
   ami_users       = var.ami_users
 
-  instance_type = "t2.micro"
+  instance_type = var.instance_type
   source_ami    = var.source_ami
   ssh_username  = var.ssh_username
 
@@ -69,7 +74,7 @@ build {
     script = "packer/install-script.sh"
   }
 
-  
+
 
   provisioner "file" {
 
