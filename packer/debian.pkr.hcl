@@ -8,7 +8,7 @@ packer {
 }
 
 variable "aws_region" {
-type    = string
+  type    = string
   default = "us-east-1"
 }
 
@@ -71,7 +71,7 @@ build {
       "CHECKPOINT_DISABLE=1"
     ]
 
-    script = "packer/install-script.sh"
+    script = "install-script.sh"
   }
 
 
