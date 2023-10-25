@@ -1,0 +1,14 @@
+[Unit]
+Description=webapp Java Application
+After=cloud-init.service
+Wants=cloud-init.service
+
+[Service]
+ExecStart=/usr/bin/java -jar /home/webappusr/webapp-0.0.1-SNAPSHOT.jar --spring.config.name=application
+Restart=always
+User=webappusr
+WorkingDirectory=/home/webappusr/
+
+[Install]
+WantedBy=multi-user.target
+

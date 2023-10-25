@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Set the root password for MariaDB
-export MYSQL_ROOT_PASSWORD="root@1234"
 
 # Set DEBIAN_FRONTEND to noninteractive
 export DEBIAN_FRONTEND=noninteractive
@@ -23,26 +21,16 @@ sudo apt --fix-broken install
 # Update package repositories
 sudo apt update
 
-# Install Maven
-sudo apt -y install maven
-
-# Install MariaDB Server
-sudo apt -y install mariadb-server
-
-# Remove anonymous users
-sudo mysql -e "DELETE FROM mysql.user WHERE User='';"
-
-# Disallow remote root login
-sudo mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost','127.0.0.1','::1');"
-
-# Remove the test database
-sudo mysql -e "DROP DATABASE IF EXISTS test;"
-sudo mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
+sudo apt install maven 
 
 
-sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'root@1234' WITH GRANT OPTION;"
+sudo useradd -m -s /bin/bash webappusr
 
-# Reload privilege tables
-sudo mysql -e "FLUSH PRIVILEGES;"
+sudo cp packer/webapp.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable webapp.service
+sudo systemctl start webapp.service
+
 
 echo "Software installation and configuration completed."

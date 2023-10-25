@@ -79,11 +79,11 @@ build {
   provisioner "file" {
 
     source      = "${var.source_file}"
-    destination = "/home/admin/"
+    destination = "/home/webappusr/"
   }
   provisioner "file" {
     source      = "${var.accounts_file}"
-    destination = "/home/admin/"
+    destination = "/home/webappusr/"
   }
 }
 
