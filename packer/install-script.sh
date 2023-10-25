@@ -26,7 +26,8 @@ sudo apt install maven
 
 sudo useradd -m -s /bin/bash webappusr
 
-sudo cp packer/webapp.service /etc/systemd/system/
+
+sudo cp webapp.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
