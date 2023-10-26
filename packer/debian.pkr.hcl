@@ -24,12 +24,12 @@ variable "ssh_username" {
 
 variable "source_file" {
   type    = string
-  default = "../target/webapp-0.0.1-SNAPSHOT.jar"
+  default = ""
 }
 
 variable "accounts_file" {
   type    = string
-  default = "../accounts.csv"
+  default = ""
 }
 variable "ami_users" {
   type    = list(string)
