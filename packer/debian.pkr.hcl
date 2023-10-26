@@ -24,12 +24,12 @@ variable "ssh_username" {
 
 variable "source_file" {
   type    = string
-  default = ""
+  default = "../target/webapp-0.0.1-SNAPSHOT.jar"
 }
 
 variable "accounts_file" {
   type    = string
-  default = ""
+  default = "../accounts.csv"
 }
 variable "ami_users" {
   type    = list(string)
@@ -65,25 +65,32 @@ source "amazon-ebs" "my-ami" {
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
+  provisioner "file" {
+
+    source      = "webapp.service"
+    destination = "/home/admin/webapp.service"
+  }
+
+  provisioner "file" {
+    source      = "${var.source_file}"
+    destination = "/home/admin/app.jar"
+  }
+
+  provisioner "file" {
+    source      = "${var.accounts_file}"
+    destination = "/home/admin/accounts.csv"
+  }
+
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1"
     ]
 
-    script = "packer/install-script.sh"
+    script = "install-script.sh"
   }
 
 
-
-  provisioner "file" {
-
-    source      = "${var.source_file}"
-    destination = "/home/webappusr/"
-  }
-  provisioner "file" {
-    source      = "${var.accounts_file}"
-    destination = "/home/webappusr/"
-  }
 }
 
