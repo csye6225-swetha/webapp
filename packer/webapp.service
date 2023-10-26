@@ -4,6 +4,7 @@ After=cloud-init.service
 Wants=cloud-init.service
 
 [Service]
+
 ExecStart=/usr/bin/java -jar /opt/csye6225/app.jar --spring.config.name=application --spring.config.location=file:/home/admin/
 Restart=always
 User=csye6225

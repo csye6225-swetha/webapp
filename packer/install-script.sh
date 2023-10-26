@@ -24,11 +24,18 @@ sudo apt update
 sudo apt install maven 
 
 
+
 sudo cp /home/admin/webapp.service /etc/systemd/system/
 
 sudo groupadd csye6225
 
 sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225
+
+sudo cp webapp.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable webapp.service
+sudo systemctl start webapp.service
 
 sudo mv /home/admin/app.jar  /opt/csye6225/
 
@@ -36,7 +43,5 @@ sudo mv /home/admin/app.jar  /opt/csye6225/
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
 sudo systemctl start webapp.service
-
-
 
 echo "Software installation and configuration completed."
