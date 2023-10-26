@@ -4,10 +4,10 @@ After=cloud-init.service
 Wants=cloud-init.service
 
 [Service]
-ExecStart=/usr/bin/java -jar /home/webappusr/webapp-0.0.1-SNAPSHOT.jar --spring.config.name=application
+ExecStart=/usr/bin/java -jar /opt/csye6225/app.jar --spring.config.name=application --spring.config.location=file:/home/admin/
 Restart=always
-User=webappusr
-WorkingDirectory=/home/webappusr/
+User=csye6225
+WorkingDirectory=/opt/csye6225/
 
 [Install]
 WantedBy=multi-user.target
