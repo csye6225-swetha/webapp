@@ -65,6 +65,23 @@ source "amazon-ebs" "my-ami" {
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
+  provisioner "file" {
+
+    source      = "packer/webapp.service"
+    destination = "/home/admin/webapp.service"
+  }
+
+  provisioner "file" {
+    source      = "${var.source_file}"
+    destination = "/home/admin/app.jar"
+  }
+
+  provisioner "file" {
+    source      = "${var.accounts_file}"
+    destination = "/home/admin/accounts.csv"
+  }
+
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
@@ -74,16 +91,5 @@ build {
     script = "packer/install-script.sh"
   }
 
-
-
-  provisioner "file" {
-
-    source      = "${var.source_file}"
-    destination = "/home/webappusr/"
-  }
-  provisioner "file" {
-    source      = "${var.accounts_file}"
-    destination = "/home/webappusr/"
-  }
 }
 
