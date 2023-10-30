@@ -18,7 +18,8 @@ Build and Deploy Instructions:
 4. Build the application using Maven using following command: 
     mvn install -DskipTests 
    This command will compile your code, run tests, and package your application into a JAR.
-5. Run the jar file using the command: 
+5. Run the jar file using the command:
+   
    java -jar target/your-application-name.jar
    
    
