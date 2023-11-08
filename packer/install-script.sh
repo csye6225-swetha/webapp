@@ -44,6 +44,13 @@ sudo cp webapp.service /etc/systemd/system/
 sudo mv /home/admin/app.jar  /opt/csye6225/
 
 
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+    -a fetch-config \
+    -m ec2 \
+    -c file:/home/admin/cloudwatch-config.json \
+    -s
+
+
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
 sudo systemctl start webapp.service
