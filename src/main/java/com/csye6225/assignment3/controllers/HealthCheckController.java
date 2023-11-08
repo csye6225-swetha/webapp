@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.annotation.Counted;
+
 @RestController
 @RequestMapping("/healthz")
 public class HealthCheckController {
@@ -23,6 +25,7 @@ public class HealthCheckController {
 	        this.dataSource = dataSource;
 	    }
 	 
+	 @Counted(value = "healthCheckCallCounter")
 	 @GetMapping
 	 public ResponseEntity<Void> healthCheck() {
 		 
