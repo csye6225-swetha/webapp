@@ -23,6 +23,7 @@ sudo apt update
 
 sudo apt install maven 
 
+sudo apt-get install -y amazon-cloudwatch-agent
 
 
 sudo cp /home/admin/webapp.service /etc/systemd/system/
