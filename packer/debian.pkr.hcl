@@ -81,6 +81,10 @@ build {
     destination = "/home/admin/accounts.csv"
   }
 
+  provisioner "file" {
+    source      = "packer/cloudwatch-config.json"
+    destination = "/home/admin/cloudwatch-config.json"
+  }
 
   provisioner "shell" {
     environment_vars = [
