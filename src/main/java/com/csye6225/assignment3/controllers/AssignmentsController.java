@@ -24,6 +24,8 @@ import com.csye6225.assignment3.pojo.Assignment;
 import com.csye6225.assignment3.repositories.AccountRepository;
 import com.csye6225.assignment3.repositories.AssignmentRepository;
 
+import io.micrometer.core.annotation.Counted;
+
 @RestController
 @RequestMapping("v1")
 public class AssignmentsController {
@@ -36,6 +38,7 @@ public class AssignmentsController {
     private AccountRepository accountRepository;
 	
 	
+	@Counted(value = "GetAssignmentsCallCounter")
 	@GetMapping(value = "/assignments")
     public Iterable<Assignment> getAllAssignments() {
 		
@@ -45,6 +48,7 @@ public class AssignmentsController {
         return assignments;
     }
 	
+	@Counted(value = "GetAssignmentsIDCallCounter")
 	@GetMapping("/assignments/{id}")
 	public ResponseEntity<Assignment> getAssignmentById(@PathVariable("id") String id) {
 	    Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
@@ -58,7 +62,7 @@ public class AssignmentsController {
 	    }
 	}
 	
-	
+	@Counted(value = "PostAssignmentCallCounter")
 	@PostMapping("/assignments")
 	public ResponseEntity<String> createAssignment(@RequestBody Assignment assignment) {
 		
@@ -93,7 +97,7 @@ public class AssignmentsController {
 	
     }
 	
-	
+	@Counted(value = "DeleteAssignmentCallCounter")
 	@DeleteMapping("/assignments/{id}")
 	public ResponseEntity<String> deleteAssignment(@PathVariable("id") String id) {
 		
@@ -127,7 +131,7 @@ public class AssignmentsController {
 	}
 	
 	
-	
+	@Counted(value = "UpdateAssignmentCallCounter")
 	@PutMapping("/assignments/{id}")
 	public ResponseEntity<String> updateAssignment(
 	    @PathVariable("id") String id,

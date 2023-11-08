@@ -23,6 +23,7 @@ sudo apt update
 
 sudo apt install maven 
 
+sudo apt-get install -y amazon-cloudwatch-agent
 
 
 sudo cp /home/admin/webapp.service /etc/systemd/system/
@@ -44,5 +45,9 @@ sudo mv /home/admin/app.jar  /opt/csye6225/
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
 sudo systemctl start webapp.service
+
+
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file://home/admin/cloudwatch-config.json -s
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start
 
 echo "Software installation and configuration completed."
