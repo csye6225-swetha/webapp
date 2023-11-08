@@ -26,6 +26,8 @@ import com.csye6225.assignment3.repositories.AssignmentRepository;
 
 import io.micrometer.core.annotation.Counted;
 
+
+
 @RestController
 @RequestMapping("v1")
 public class AssignmentsController {
@@ -48,7 +50,7 @@ public class AssignmentsController {
         return assignments;
     }
 	
-	@Counted(value = "GetAssignmentsIDCallCounter")
+	@Counted(value = "GetAssignmentIdCounter")
 	@GetMapping("/assignments/{id}")
 	public ResponseEntity<Assignment> getAssignmentById(@PathVariable("id") String id) {
 	    Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
