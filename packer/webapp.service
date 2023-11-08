@@ -4,6 +4,7 @@ After=cloud-init.service
 Wants=cloud-init.service
 
 [Service]
+ExecStartPre=/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start  
 ExecStart=/usr/bin/java -jar /opt/csye6225/app.jar --spring.config.name=application --spring.config.location=file:/home/admin/
 Restart=always
 User=csye6225
