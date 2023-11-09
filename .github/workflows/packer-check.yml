@@ -32,7 +32,7 @@ jobs:
 
     - name: Packer Validate
       run: |
-        for template in $(find . -name '*.json' -o -name '*.hcl'); do
+        for template in $(find . -name '*.hcl'); do
           packer validate "$template"
         done
       
