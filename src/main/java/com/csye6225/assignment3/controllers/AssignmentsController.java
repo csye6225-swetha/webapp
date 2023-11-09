@@ -23,8 +23,11 @@ import com.csye6225.assignment3.pojo.Account;
 import com.csye6225.assignment3.pojo.Assignment;
 import com.csye6225.assignment3.repositories.AccountRepository;
 import com.csye6225.assignment3.repositories.AssignmentRepository;
+import com.csye6225.assignment3.services.CustomMetricsService;
 
-import io.micrometer.core.annotation.Counted;
+
+
+
 
 
 
@@ -39,20 +42,30 @@ public class AssignmentsController {
 	@Autowired
     private AccountRepository accountRepository;
 	
+
+    @Autowired
+    private CustomMetricsService customMetricsService;
+
 	
-	@Counted(value = "GetAssignmentsCallCounter")
+	
+	
 	@GetMapping(value = "/assignments")
     public Iterable<Assignment> getAllAssignments() {
 		
 		Iterable<Assignment> assignments = assignmentRepository.findAll();
 
-        
+		 customMetricsService.incrementGetAssignmentsCallCounter();
+		
         return assignments;
+        
+        
     }
 	
-	@Counted(value = "GetAssignmentIdCounter")
 	@GetMapping("/assignments/{id}")
 	public ResponseEntity<Assignment> getAssignmentById(@PathVariable("id") String id) {
+		
+		 customMetricsService.incrementGetAssignmentsIdCallCounter();
+		 
 	    Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
 
 	    if (assignmentOptional.isPresent()) {
@@ -64,9 +77,12 @@ public class AssignmentsController {
 	    }
 	}
 	
-	@Counted(value = "PostAssignmentCallCounter")
+	
 	@PostMapping("/assignments")
 	public ResponseEntity<String> createAssignment(@RequestBody Assignment assignment) {
+		
+		
+		customMetricsService.incrementPostAssignmentsCallCounter();
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -99,9 +115,11 @@ public class AssignmentsController {
 	
     }
 	
-	@Counted(value = "DeleteAssignmentCallCounter")
+	
 	@DeleteMapping("/assignments/{id}")
 	public ResponseEntity<String> deleteAssignment(@PathVariable("id") String id) {
+		
+		customMetricsService.incrementDeleteAssignmentsCallCounter();
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -133,12 +151,15 @@ public class AssignmentsController {
 	}
 	
 	
-	@Counted(value = "UpdateAssignmentCallCounter")
+	
 	@PutMapping("/assignments/{id}")
 	public ResponseEntity<String> updateAssignment(
 	    @PathVariable("id") String id,
 	    @RequestBody Assignment updatedAssignment
 	) {
+		
+		customMetricsService.incrementUpdateAssignmentsCallCounter();
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication != null && authentication.isAuthenticated()) {
