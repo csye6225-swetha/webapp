@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +14,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.micrometer.core.annotation.Counted;
+import com.csye6225.assignment3.services.CustomMetricsService;
+
 
 @RestController
 @RequestMapping("/healthz")
 public class HealthCheckController {
+	
+	
+	@Autowired
+	private CustomMetricsService customMetricsService;
 	
 	private final DataSource dataSource;
 
 	 public HealthCheckController(DataSource dataSource) {
 	        this.dataSource = dataSource;
 	    }
-	 
-	 @Counted(value = "healthCheckCallCounter")
+	
 	 @GetMapping
 	 public ResponseEntity<Void> healthCheck() {
 		 
+		    customMetricsService.incrementHealthCallCounter();
+		   
 		 
 	        boolean isDatabaseConnected = isDatabaseConnected();
 
