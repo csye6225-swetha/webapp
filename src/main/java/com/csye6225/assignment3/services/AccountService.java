@@ -23,7 +23,7 @@ public class AccountService {
 	
 	public void loadUsersFromCSV() {
 		
-		String csvFilePath = "/Users/swethapaturu/Desktop/accounts.csv";
+		String csvFilePath = "/opt/accounts.csv";
 		
 		
 		 try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
