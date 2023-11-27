@@ -29,9 +29,9 @@ import com.csye6225.assignment3.pojo.Submission;
 import com.csye6225.assignment3.pojo.SubmissionResponse;
 import com.csye6225.assignment3.repositories.AccountRepository;
 import com.csye6225.assignment3.repositories.AssignmentRepository;
+
 import com.csye6225.assignment3.repositories.SubmissionRepository;
 import com.csye6225.assignment3.services.CustomMetricsService;
-
 
 
 
@@ -47,6 +47,11 @@ public class AssignmentsController {
 	@Autowired
     private AccountRepository accountRepository;
 	
+
+    @Autowired
+    private CustomMetricsService customMetricsService;
+
+	
 	
 	@Autowired
 	private SubmissionRepository submissionRepository;
@@ -56,8 +61,7 @@ public class AssignmentsController {
     private CustomMetricsService customMetricsService;
 
 	
-	
-	
+
 	@GetMapping(value = "/assignments")
     public Iterable<Assignment> getAllAssignments() {
 		
@@ -70,7 +74,7 @@ public class AssignmentsController {
         
     }
 	
-	
+
 	@GetMapping("/assignments/{id}")
 	public ResponseEntity<Assignment> getAssignmentById(@PathVariable("id") String id) {
 		
