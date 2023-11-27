@@ -2,6 +2,10 @@ package com.csye6225.assignment3.controllers;
 
 
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.csye6225.assignment3.pojo.Account;
 import com.csye6225.assignment3.pojo.Assignment;
+import com.csye6225.assignment3.pojo.Submission;
+import com.csye6225.assignment3.pojo.SubmissionResponse;
 import com.csye6225.assignment3.repositories.AccountRepository;
 import com.csye6225.assignment3.repositories.AssignmentRepository;
+import com.csye6225.assignment3.repositories.SubmissionRepository;
 import com.csye6225.assignment3.services.CustomMetricsService;
 
 
@@ -39,6 +46,10 @@ public class AssignmentsController {
 
 	@Autowired
     private AccountRepository accountRepository;
+	
+	
+	@Autowired
+	private SubmissionRepository submissionRepository;
 	
 
     @Autowired
@@ -193,6 +204,103 @@ public class AssignmentsController {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed.");
 	    
 	}
+	
+	
+
+	@PostMapping("/assignments/{id}/submission")
+	public ResponseEntity<?> submitAssignment( @PathVariable("id") String id, @RequestBody Map<String, String> submissionData) {
+		
+		
+		//customMetricsService.incrementPostSuCallCounter();
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		
+		 if (authentication == null || !authentication.isAuthenticated()) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated.");
+		    }
+
+		
+		    
+		   
+		        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		        
+		        
+		        String username = userDetails.getUsername();
+
+		        System.out.println(username);
+		       
+		        Account currentUser = accountRepository.findByEmail(username).orElse(null);
+
+		        if (currentUser == null) {
+		        	
+		        	 return ResponseEntity.badRequest().body("User not found.");
+		        } 
+		        
+ 
+		
+		
+		Assignment existingAssignment = assignmentRepository.findById(id).orElse(null);
+	    if (existingAssignment == null) {
+	        return ResponseEntity.badRequest().body("Assignment not found.");
+	    }
+	    
+	    LocalDateTime localDateTime = LocalDateTime.now();
+	    
+	    
+	    Date dateFromLocalDateTime = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	    
+	    
+	    
+	    if (existingAssignment.getDeadline().before(dateFromLocalDateTime)) {
+	        return ResponseEntity.badRequest().body("Submission deadline has passed.");
+	    }
+	    
+	    int numberOfSubmissions = submissionRepository.countByAssignmentAndUser(existingAssignment, currentUser);
+	    if (numberOfSubmissions >= existingAssignment.getNum_of_attempts()) {
+	        return ResponseEntity.badRequest().body("Retry limit exceeded.");
+	    }
+	    
+	    
+	    String submissionUrl = submissionData.get("submission_url");
+	    if (submissionUrl == null || submissionUrl.isEmpty()) {
+	        return ResponseEntity.badRequest().body("Submission URL is required.");
+	    }
+	    
+	    
+	    Submission submission = new Submission();
+	    submission.setUser(currentUser);
+	    submission.setAssignment(existingAssignment);
+	    submission.setSubmissionUrl(submissionUrl);
+
+	    
+	    submissionRepository.save(submission);
+	    
+	    
+	    
+	    SubmissionResponse response = new SubmissionResponse();
+	    response.setId(submission.getId()); 
+	    response.setUserId(submission.getUser().getId()); 
+	    response.setAssignmentId(submission.getAssignment().getId());
+	    response.setSubmissionUrl(submission.getSubmissionUrl());
+	    response.setSubmissionDate(submission.getSubmissionDate());
+	    response.setSubmissionUpdatedDate(submission.getSubmissionUpdatedDate());
+
+	   
+
+	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	    
+	   
+	    
+	    
+	
+    }
+	
+	
+	
+	
+	
+	
 	
 	
 }
