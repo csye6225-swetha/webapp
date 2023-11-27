@@ -18,6 +18,11 @@ wget -O "jdk-21_linux-x64_bin.deb" "https://download.oracle.com/java/21/latest/j
 sudo dpkg -i jdk-21_linux-x64_bin.deb
 sudo apt --fix-broken install
 
+sudo wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+sudo apt --fix-broken install
+
+
 # Update package repositories
 sudo apt update
 
@@ -34,20 +39,22 @@ sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225
 
 sudo cp webapp.service /etc/systemd/system/
 
-sudo systemctl daemon-reload
-sudo systemctl enable webapp.service
-sudo systemctl start webapp.service
 
 
 sudo mv /home/admin/app.jar  /opt/csye6225/
 
 
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+    -a fetch-config \
+    -m ec2 \
+    -c file:/home/admin/cloudwatch-config.json \
+    -s
+
+
 sudo systemctl daemon-reload
 sudo systemctl enable webapp.service
 sudo systemctl start webapp.service
 
 
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file://home/admin/cloudwatch-config.json -s
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start
 
 echo "Software installation and configuration completed."
