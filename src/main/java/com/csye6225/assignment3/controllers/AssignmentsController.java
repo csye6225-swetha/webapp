@@ -52,13 +52,9 @@ public class AssignmentsController {
     private CustomMetricsService customMetricsService;
 
 	
-	
-	@Autowired
-	private SubmissionRepository submissionRepository;
-	
-
     @Autowired
-    private CustomMetricsService customMetricsService;
+    private SubmissionRepository submissionRepository;
+	
 
 	
 
