@@ -28,7 +28,8 @@ public class Account {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@Column(name = "id", unique = true, nullable = false)
 	private String id;
-	
+
+
 	@Column(name = "first_name", nullable = false)
 	private String first_name;
 	
@@ -60,6 +61,16 @@ public class Account {
 	@JsonIgnore
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	 private List<Assignment> assignments;
+	
+	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 
 	public String getFirst_name() {
