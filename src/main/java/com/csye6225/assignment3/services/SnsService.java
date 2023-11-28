@@ -14,7 +14,7 @@ public class SnsService {
 	private final String topicArn;
 	
 	
-	public SnsService(@Value("${sns.topic.arn}") String topicArn) {
+	public SnsService(@Value("${sns.topic.arn:}") String topicArn) {
         this.snsClient = SnsClient.builder().build();
         this.topicArn = topicArn;
     }
