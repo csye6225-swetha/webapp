@@ -31,6 +31,7 @@ import com.csye6225.assignment3.repositories.AccountRepository;
 import com.csye6225.assignment3.repositories.AssignmentRepository;
 import com.csye6225.assignment3.repositories.SubmissionRepository;
 import com.csye6225.assignment3.services.CustomMetricsService;
+import com.csye6225.assignment3.services.SnsService;
 
 
 
@@ -56,6 +57,10 @@ public class AssignmentsController {
 	
     @Autowired
     private SubmissionRepository submissionRepository;
+    
+    
+    @Autowired
+    private SnsService snsService;
 	
 
 
@@ -280,6 +285,7 @@ public class AssignmentsController {
 	    
 	    submissionRepository.save(submission);
 	    
+	    snsService.notifySubmission(currentUser.getEmail(), submission.getSubmissionUrl());
 	    
 	    
 	    SubmissionResponse response = new SubmissionResponse();
@@ -291,6 +297,7 @@ public class AssignmentsController {
 	    response.setSubmissionUpdatedDate(submission.getSubmissionUpdatedDate());
 
 	   
+	    
 
 	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	    
