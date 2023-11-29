@@ -2,6 +2,7 @@ package com.csye6225.assignment3.services;
 
 
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +13,13 @@ import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 import software.amazon.awssdk.services.sns.model.SnsException;
 
-
 @Service
 public class SnsService {
 	
 	private final SnsClient snsClient;
 	private final String topicArn;
 	
-	
+
 	public SnsService(@Value("${sns.topic.arn}") String topicArn) {
         this.snsClient = SnsClient.builder().build();
         this.topicArn = topicArn;
@@ -49,5 +49,6 @@ public class SnsService {
             logger.error("Failed to send notification for submission from " + email);
         }
     }
+                                         
 
 }
