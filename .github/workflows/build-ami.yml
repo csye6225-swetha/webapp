@@ -71,11 +71,12 @@ jobs:
          packer init packer/debian.pkr.hcl
 
       - name: Build AMI
+        id: build_ami
         run: |
          output=$(packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl)
          echo "$output"
          ami_id=$(echo "$output" | grep -oP 'us-east-1: \Kami-\w+')
-         echo "AMI_ID=$ami_id" >> $GITHUB_OUTPUT
+         echo "ami_id=$ami_id" >> $GITHUB_OUTPUT
 
 
       - name: Update Launch Template and Refresh Instances
@@ -83,7 +84,7 @@ jobs:
           #!/bin/bash
           set -e
       
-          latest_ami_id=${{ needs.previous_job.outputs.ami_id }}
+          latest_ami_id=${{ needs.build_ami.outputs.ami_id }}
       
           # Dynamically determine the launch template name
           # Adjust the query based on your criteria (e.g., tags, naming patterns)
