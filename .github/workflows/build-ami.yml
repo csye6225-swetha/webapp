@@ -72,7 +72,19 @@ jobs:
 
       - name: Build AMI
         run: |
-         packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl
+         output=$(packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl)
+         echo "$output"
+         ami_id=$(echo "$output" | grep -oP 'us-east-1: \Kami-\w+')
+         echo "AMI_ID=$ami_id" >> $GITHUB_ENV
+      
+      - name: Display AMI
+        run: echo "The AMI ID is $AMI_ID"
+          
+      
+
+
+    
+        
 
 
 
