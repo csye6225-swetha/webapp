@@ -82,7 +82,7 @@ jobs:
           set -e
 
            latest_ami_id=$(aws ec2 describe-images \
-           --owners self \  
+           --owners self \
            --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' \
            --output text)
     
