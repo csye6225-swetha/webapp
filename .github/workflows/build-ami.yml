@@ -73,21 +73,25 @@ jobs:
       - name: Build AMI
         id: build_ami
         run: |
-         output=$(packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl)
-         echo "$output"
-         ami_id=$(echo "$output" | grep -oP 'us-east-1: \Kami-\w+')
-         echo "ami_id=$ami_id" >> $GITHUB_OUTPUT
+         packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl
 
 
       - name: Update Launch Template and Refresh Instances
         run: |
           #!/bin/bash
           set -e
-      
-          latest_ami_id=${{ needs.build_ami.outputs.ami_id }}
-      
-          # Dynamically determine the launch template name
-          # Adjust the query based on your criteria (e.g., tags, naming patterns)
+
+           latest_ami_id=$(aws ec2 describe-images \
+           --owners self \  
+           --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' \
+           --output text)
+    
+           if [ -z "$latest_ami_id" ]; then
+           echo "Latest AMI not found"
+           exit 1
+           fi
+    
+    
           launch_template_name=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[?contains(LaunchTemplateName, `launch_template`)].LaunchTemplateName' --output text)
           if [ -z "$launch_template_name" ]; then
             echo "Launch template not found"
