@@ -79,6 +79,40 @@ jobs:
       
       - name: Display AMI
         run: echo "The AMI ID is $AMI_ID"
+
+      - name: Update Launch Template and Refresh Instances
+        run: |
+          #!/bin/bash
+          set -e
+      
+          latest_ami_id=${{ needs.previous_job.outputs.ami_id }}
+      
+          # Create a new version of the Launch Template with the latest AMI
+          new_version=$(aws ec2 create-launch-template-version --launch-template-name "launch_template" --version-description "New version" --launch-template-data "{\"ImageId\":\"$latest_ami_id\"}")
+      
+          # Extract the new version number
+          new_version_number=$(echo $new_version | jq -r '.LaunchTemplateVersion.VersionNumber')
+      
+          # Update the Auto Scaling Group to use the new Launch Template version
+          aws autoscaling update-auto-scaling-group --auto-scaling-group-name "my-auto-scaling-group" --launch-template "{\"LaunchTemplateName\":\"launch_template\",\"Version\":\"$new_version_number\"}"
+      
+          # Start an instance refresh
+          aws autoscaling start-instance-refresh --auto-scaling-group-name "my-auto-scaling-group"
+      
+          # Wait for the instance refresh to complete
+          while true; do
+            sleep 30
+            refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name "my-auto-scaling-group" --query 'InstanceRefreshes[0].Status' --output text)
+            if [ "$refresh_status" == "Successful" ]; then
+              echo "Instance refresh completed successfully."
+              break
+            elif [ "$refresh_status" == "Failed" ]; then
+              echo "Instance refresh failed."
+              exit 1
+            fi
+            echo "Waiting for instance refresh to complete..."
+          done
+      
           
       
 
