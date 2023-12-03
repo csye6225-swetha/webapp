@@ -99,11 +99,14 @@ jobs:
            fi
     
     
-          launch_template_name=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[?contains(LaunchTemplateName, `launch_template`)].LaunchTemplateName' --output text)
-          if [ -z "$launch_template_name" ]; then
-            echo "Launch template not found"
-            exit 1
-          fi
+          # launch_template_name=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[?contains(LaunchTemplateName, `launch_template`)].LaunchTemplateName' --output text)
+          # if [ -z "$launch_template_name" ]; then
+          #   echo "Launch template not found"
+          #   exit 1
+          # fi
+
+
+          launch_template_name=launch_template_test
       
           echo "Using launch template: $launch_template_name"
       
