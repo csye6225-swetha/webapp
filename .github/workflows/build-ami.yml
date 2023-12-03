@@ -80,6 +80,10 @@ jobs:
       - name: Display AMI
         run: echo "The AMI ID is $AMI_ID"
 
+      - name: Set AMI ID Output
+        id: set_output
+        run: echo "::set-output name=ami_id::$AMI_ID"
+
       - name: Update Launch Template and Refresh Instances
         run: |
           #!/bin/bash
