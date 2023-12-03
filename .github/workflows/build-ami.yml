@@ -75,14 +75,8 @@ jobs:
          output=$(packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl)
          echo "$output"
          ami_id=$(echo "$output" | grep -oP 'us-east-1: \Kami-\w+')
-         echo "AMI_ID=$ami_id" >> $GITHUB_ENV
-      
-      - name: Display AMI
-        run: echo "The AMI ID is $AMI_ID"
+         echo "AMI_ID=$ami_id" >> $GITHUB_OUTPUT
 
-      - name: Set AMI ID Output
-        id: set_output
-        run: echo "::set-output name=ami_id::$AMI_ID"
 
       - name: Update Launch Template and Refresh Instances
         run: |
