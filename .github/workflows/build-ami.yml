@@ -75,6 +75,13 @@ jobs:
         run: |
          packer build -var 'source_file=/home/runner/work/webapp/webapp/target/webapp-0.0.1-SNAPSHOT.jar' -var 'accounts_file=/home/runner/work/webapp/webapp/accounts.csv' packer/debian.pkr.hcl
 
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+         aws-access-key-id: ${{ secrets.DEMO_AWS_ACCESS_KEY_ID}}
+         aws-secret-access-key: ${{ secrets.DEMO_AWS_SECRET_ACCESS_KEY }}
+         aws-region: us-east-1
+
 
       - name: Update Launch Template and Refresh Instances
         run: |
@@ -82,7 +89,7 @@ jobs:
           set -e
 
            latest_ami_id=$(aws ec2 describe-images \
-           --owners self \
+           --owners 969159499630 \
            --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' \
            --output text)
     
