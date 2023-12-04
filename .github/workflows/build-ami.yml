@@ -117,14 +117,26 @@ jobs:
       
           echo "Using Auto Scaling Group: $asg_name"
       
-          # Create a new version of the Launch Template with the latest AMI
-          new_version=$(aws ec2 create-launch-template-version --launch-template-name "$launch_template_name" --version-description "New version" --launch-template-data "{\"ImageId\":\"$latest_ami_id\", \"InstanceType\":\"t2.micro\"}")
-      
+          current_template_data=$(aws ec2 describe-launch-template-versions \
+          --launch-template-name "$launch_template_name" \
+          --versions '$Latest' \
+          --query 'LaunchTemplateVersions[0].LaunchTemplateData' \
+          --output json)
+
+          # Update the AMI ID in the launch template data
+          updated_template_data=$(echo $current_template_data | jq --arg ami_id "$latest_ami_id" '.ImageId = $ami_id')
+
+          # Create a new version of the launch template with updated AMI
+          new_version=$(aws ec2 create-launch-template-version \
+          --launch-template-name "$launch_template_name" \
+          --version-description "New version with updated AMI" \
+          --launch-template-data "$updated_template_data")
+
           # Extract the new version number
           new_version_number=$(echo $new_version | jq -r '.LaunchTemplateVersion.VersionNumber')
       
           # Update the Auto Scaling Group to use the new Launch Template version
-          aws autoscaling update-auto-scaling-group --auto-scaling-group-name "$asg_name" --launch-template "{\"LaunchTemplateName\":\"$launch_template_name\",\"Version\":\"$new_version_number\"}"
+           aws autoscaling update-auto-scaling-group --auto-scaling-group-name "$asg_name" --launch-template "{\"LaunchTemplateName\":\"$launch_template_name\",\"Version\":\"$new_version_number\"}"
       
           # Start an instance refresh
           aws autoscaling start-instance-refresh --auto-scaling-group-name "$asg_name"
