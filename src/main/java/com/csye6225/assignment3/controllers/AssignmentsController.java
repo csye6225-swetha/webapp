@@ -40,7 +40,7 @@ import com.csye6225.assignment3.services.SnsService;
 
 
 @RestController
-@RequestMapping("v2")
+@RequestMapping("v3")
 public class AssignmentsController {
 	
 	@Autowired
