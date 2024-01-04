@@ -151,6 +151,9 @@ jobs:
             elif [ "$refresh_status" == "Failed" ]; then
               echo "Instance refresh failed."
               exit 1
+            elif [ "$refresh_status" == "Cancelling" ]; then
+              echo "Instance refresh is being cancelled."
+              exit 1
             fi
             echo "Waiting for instance refresh to complete..."
           done
