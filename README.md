@@ -1,7 +1,9 @@
 # Assignment Management System
 
 
-This Spring Boot application serves as an Assignment Management System, providing functionality for users to add, modify, and delete assignments. It supports the submission of assignments, complete with checks for maximum attempts and adherence to deadlines. The system also features user authentication, implemented through basic HTTP authentication using email and password, ensuring secure and controlled access. Additionally, it is integrated with a CI/CD pipeline for building AMIs, with the CI process including checks to ensure that integration tests are successfully executed, guaranteeing robustness and reliability of the deployments. 
+This Spring Boot application serves as an Assignment Management System, providing functionality for users to add, modify, and delete assignments. It supports the submission of assignments, complete with checks for maximum attempts and adherence to deadlines. The system also features user authentication, implemented through basic HTTP authentication using email and password, ensuring secure and controlled access. 
+
+Additionally, it is integrated with a CI/CD pipeline for building AMIs, with the CI process including checks to ensure that integration tests are successfully executed, guaranteeing robustness and reliability of the deployments. 
 
 
 ## CI/CD Pipeline
